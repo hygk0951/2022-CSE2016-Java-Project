@@ -10,12 +10,26 @@ public class Card {
 
     public Card(char symbol, char number) {
         this.symbol = symbol;
-        if (number != 'A')
-            this.number = 10;
+        this.number = number;
     }
 
     public char getSymbol() {
-        return symbol;
+        char symbolChanged = ' ';
+        switch (symbol) {
+            case 'S':
+                symbolChanged = '♠';
+                break;
+            case 'H':
+                symbolChanged = '♥';
+                break;
+            case 'D':
+                symbolChanged = '◆';
+                break;
+            case 'C':
+                symbolChanged = '♣';
+                break;
+        }
+        return symbolChanged;
     }
 
     public int getNumber() {

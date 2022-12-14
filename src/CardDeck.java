@@ -25,7 +25,9 @@ public class CardDeck {
             for (int i = index + 1; i < card_count; i++)
                 deck[i - 1] = deck[i];
             card_count--;
+            System.out.println("남은 카드 갯수 : "+card_count);
         }
+        System.out.println(next_card.getSymbol()+" "+next_card.getNumber());
         return next_card;
     }
 
