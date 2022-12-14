@@ -1,17 +1,22 @@
+// View
+
 import javax.swing.*;
 
-public class GameView extends JFrame implements ViewBehavior{
+public class GameView extends JFrame implements ViewBehavior {
     private JPanel gameViewPanel;
-    private JLabel gameGuide;
-    private JLabel playerCardList;
-    private JLabel comCardList;
-    private JLabel comCardTotal;
-    private JLabel playerCardTotal;
-    private JLabel comMoney;
-    private JLabel playerMoney;
+    public JLabel gameGuide;
+    public JLabel playerCardList;
+    public JLabel comCardList;
+    public JLabel comCardTotal;
+    public JLabel playerCardTotal;
+    public JLabel comMoney;
+    public JLabel playerMoney;
     private JButton goHomeButton;
-    private JTextField bettingField;
-    private JButton bettingButton;
+    public JTextField bettingField;
+    public JButton bettingButton;
+    public JButton moreCardButton;
+    public JButton stopButton;
+    public JLabel totalBettingPrize;
     public ControlManager controlManager;
 
     public GameView(ControlManager controlManager, String title) {
@@ -27,6 +32,11 @@ public class GameView extends JFrame implements ViewBehavior{
 
     @Override
     public void initializeComponents() {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.addWindowListener(controlManager);
         goHomeButton.addActionListener(controlManager);
+        bettingButton.addActionListener(controlManager);
+        moreCardButton.addActionListener(controlManager);
+        stopButton.addActionListener(controlManager);
     }
 }

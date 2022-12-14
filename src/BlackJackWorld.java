@@ -12,6 +12,5 @@ public class BlackJackWorld {
         } catch (InterruptedException e){
             e.printStackTrace();
         }
-        System.out.println("TEST");
     }
 }

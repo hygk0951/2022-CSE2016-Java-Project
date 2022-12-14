@@ -1,16 +1,20 @@
-// Controller of MVC
+// Controller
 
-import javax.naming.ldap.Control;
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLOutput;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.Objects;
 
-public class ControlManager implements ActionListener {
+public class ControlManager implements ActionListener, WindowListener {
+    // View controller 연결 (View)
     IntroView introView;
     RuleView ruleView;
     GameView gameView;
+
+    // Game manager 연결 (Model)
+    GameManager gameManager;
+
     CardDeck practiceDeck;
     String cardColor = "";
     String cardList = "";
@@ -34,7 +38,7 @@ public class ControlManager implements ActionListener {
         newCardDeck();
     }
 
-    public void newCardDeck(){
+    public void newCardDeck() {
         practiceDeck = new CardDeck();
     }
 
@@ -62,6 +66,8 @@ public class ControlManager implements ActionListener {
                 GameView gameView = new GameView(this, "Play");
                 setGameView(gameView);
                 introView.setVisible(false);
+                gameManager = new GameManager(this);
+                gameManager.playGame();
                 break;
             case "Rule":
                 RuleView ruleView = new RuleView(this, "Rule");
@@ -78,7 +84,7 @@ public class ControlManager implements ActionListener {
                     int number = selected.getNumber();
 
                     switch (number) {
-                        case 1: // Ace가 나온경우
+                        case 1 -> { // Ace가 나온경우
                             // 10으로 계산했을때 21을 넘어서면 안된다.
                             if (total + 11 > 21) {
                                 number = 1;
@@ -89,51 +95,46 @@ public class ControlManager implements ActionListener {
                                 total += number;
                             }
                             number = 65; // A
-                            break;
-                        case 11: // J = 74
+                        }
+                        case 11 -> { // J = 74
                             total += 10;
                             number += 63;
-                            break;
-                        case 12: // Q = 81
+                        }
+                        case 12 -> { // Q = 81
                             total += 10;
                             number += 69;
-                            break;
-                        case 13: // K = 75
+                        }
+                        case 13 -> { // K = 75
                             total += 10;
                             number += 62;
-                            break;
-                        default:
-                            total += number;
-                            break;
+                        }
+                        default -> total += number;
                     }
                     // J, Q, K, A 인 경우
 
-                    if(symbol == '♥' || symbol == '◆') cardColor = "<font color='red'>";
+                    if (symbol == '♥' || symbol == '◆') cardColor = "<font color='red'>";
                     else cardColor = "<font color='black'>";
 
-                    if(number >= 11 || number == 1) cardList += cardColor + symbol + " " + (char)number + "</font> ";
+                    if (number >= 11 || number == 1) cardList += cardColor + symbol + " " + (char) number + "</font> ";
                     else cardList += cardColor + symbol + " " + String.valueOf(number) + "</font> ";
 
-                    this.ruleView.cardCombinations.setText("<html>"+cardList+"</html>");
+                    this.ruleView.cardCombinations.setText("<html>" + cardList + "</html>");
                 } catch (NullPointerException ne) {
                     this.ruleView.cardCombinations.setText("모든 카드가 소진되었습니다.");
                 }
                 // 21을 초과했을 때 에이스카드 하나를 11이 아닌 1로 계산해서 숫자를 낮출 수 있는지 검사
-                if(total > 21 && AceElevenCount <= 0){
+                if (total > 21 && AceElevenCount <= 0) {
                     this.ruleView.newCardButton.setEnabled(false);
                     this.ruleView.totalValue.setText("Total : " + total + " You lose");
-                }
-                else if(total > 21 && AceElevenCount > 0){
+                } else if (total > 21 && AceElevenCount > 0) {
                     AceElevenCount--;
                     total -= 10;
                     this.ruleView.totalValue.setText("Total : " + total);
-                }
-                else if(total == 21){
+                } else if (total == 21) {
                     this.ruleView.newCardButton.setEnabled(false);
                     System.out.println("Black Jack!");
                     this.ruleView.totalValue.setText("Total : " + total + " Black Jack!");
-                }
-                else{
+                } else {
                     this.ruleView.totalValue.setText("Total : " + total);
                 }
                 break;
@@ -146,14 +147,77 @@ public class ControlManager implements ActionListener {
                 this.ruleView.cardCombinations.setText("");
                 this.ruleView.totalValue.setText("Total : 0");
                 break;
+            case "배팅하기":
+                try {
+                    this.gameManager.playerBetting = Integer.parseInt(this.gameView.bettingField.getText());
+                    if(this.gameManager.playerBetting < 0)
+                        throw new NumberFormatException("minusNumber");
+                    else if(this.gameManager.playerBetting > this.gameManager.playerMoney)
+                        throw new NumberFormatException("overNumber");
+                    this.gameManager.playerBet = true;
+                    this.gameView.bettingButton.setEnabled(false);
+                    this.gameView.bettingField.setEnabled(false);
+                    this.gameManager.gameStatus = 2;
+                    this.gameManager.currentTask.cancel();
+                    this.gameManager.nextStatus();
+                    this.gameManager.playerBet = true;
+                } catch (NumberFormatException nfe) {
+                    if(Objects.equals(nfe.getMessage(), "minusNumber"))
+                        this.gameView.totalBettingPrize.setText("0보다 큰 값을 입력해주세요.");
+                    if(Objects.equals(nfe.getMessage(), "overNumber"))
+                        this.gameView.totalBettingPrize.setText("배팅금액이 보유금액보다 많습니다. 다시 입력해주세요.");
+                    else
+                        this.gameView.totalBettingPrize.setText("숫자만 입력해주세요.");
+                    this.gameView.bettingField.setText("");
+                }
+                break;
             case "Go Home":
-                if(this.ruleView != null) this.ruleView.dispose();
-                if(this.gameView != null) this.gameView.dispose();
+                if (this.ruleView != null) this.ruleView.dispose();
+                if (this.gameView != null) this.gameView.dispose();
+                if (gameManager != null) gameManager.timer.cancel();
                 introView.setVisible(true);
                 break;
 
             default:
                 break;
         }
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        // 닫은 창이 게임뷰 or 룰뷰인경우 인트로뷰로 전환
+        if (!e.getSource().getClass().getName().equals("Intro")) {
+            introView.setVisible(true);
+        }
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
     }
 }

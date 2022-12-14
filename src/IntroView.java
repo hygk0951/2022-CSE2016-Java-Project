@@ -1,8 +1,10 @@
-// <View> of MVC
+// View
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 public class IntroView extends JFrame implements ViewBehavior {
 
@@ -44,6 +46,11 @@ public class IntroView extends JFrame implements ViewBehavior {
         timerPanel.add(timerDecreaseButton);
         timerPanel.add(timerLabel);
         timerPanel.add(timerIncreaseButton);
+        timerCheckBox.setFont(new Font("console", Font.PLAIN, 18));
+        timerDecreaseButton.setFont(new Font("console", Font.PLAIN, 12));
+        timerLabel.setFont(new Font("console", Font.PLAIN, 18));
+        timerLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        timerIncreaseButton.setFont(new Font("console", Font.PLAIN, 12));
         add(timerPanel);
 
         // SOUTH - 각 버튼(플레이하기, 규칙설명, 랭킹보드) 등록
@@ -54,8 +61,11 @@ public class IntroView extends JFrame implements ViewBehavior {
             introButtonsPanel.add(introButton[i]);
         }
         introButton[0].setText("Rule");
+        introButton[0].setFont(new Font("serif", Font.PLAIN, 18));
         introButton[1].setText("Play");
+        introButton[1].setFont(new Font("serif", Font.PLAIN, 18));
         introButton[2].setText("Ranking Board");
+        introButton[2].setFont(new Font("serif", Font.PLAIN, 16));
 
         // 규칙설명 버튼
         introButton[0].addActionListener(controlManager);

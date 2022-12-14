@@ -1,3 +1,5 @@
+// View
+
 import javax.swing.*;
 
 public class RuleView extends JFrame implements ViewBehavior {
@@ -29,6 +31,8 @@ public class RuleView extends JFrame implements ViewBehavior {
     }
 
     public void initializeComponents() {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addWindowListener(controlManager);
         goHomeButton.addActionListener(controlManager);
         newCardButton.addActionListener(controlManager);
         resetButton.addActionListener(controlManager);
