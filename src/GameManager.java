@@ -127,7 +127,7 @@ public class GameManager {
         currentTask = firstDrawTask;
         return firstDrawTask;
     }
-   
+
     public void drawCard(boolean whosTurn) {
         JLabel targetCardTotal;
         JLabel targetCardList;
