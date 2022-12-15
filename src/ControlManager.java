@@ -63,11 +63,16 @@ public class ControlManager implements ActionListener, WindowListener {
                 if (timer < 60) introView.timerLabel.setText(String.valueOf(timer + 5));
                 break;
             case "Play":
-                GameView gameView = new GameView(this, "Play");
-                setGameView(gameView);
-                introView.setVisible(false);
-                gameManager = new GameManager(this);
-                gameManager.playGame();
+                if(checkPlayerName()){
+                    GameView gameView = new GameView(this, "Play");
+                    setGameView(gameView);
+                    introView.setVisible(false);
+                    gameManager = new GameManager(this);
+                    gameManager.playGame();
+                }
+                else{
+
+                }
                 break;
             case "Rule":
                 RuleView ruleView = new RuleView(this, "Rule");
@@ -167,7 +172,7 @@ public class ControlManager implements ActionListener, WindowListener {
                     if(Objects.equals(nfe.getMessage(), "overNumber"))
                         this.gameView.totalBettingPrize.setText("배팅금액이 보유금액보다 많습니다. 다시 입력해주세요.");
                     else
-                        this.gameView.totalBettingPrize.setText("숫자만 입력해주세요.");
+                        this.gameView.totalBettingPrize.setText("자연수 금액만 입력해주세요.");
                     this.gameView.bettingField.setText("");
                 }
                 break;
@@ -195,9 +200,10 @@ public class ControlManager implements ActionListener, WindowListener {
 
     @Override
     public void windowClosed(WindowEvent e) {
-        // 닫은 창이 게임뷰 or 룰뷰인경우 인트로뷰로 전환
+        // 닫은 창이 인트로뷰가 아닌경우 (게임뷰 or 룰뷰인경우) 인트로뷰로 전환
         if (!e.getSource().getClass().getName().equals("Intro")) {
             introView.setVisible(true);
+            if (gameManager != null) gameManager.timer.cancel();
         }
     }
 
@@ -219,5 +225,14 @@ public class ControlManager implements ActionListener, WindowListener {
     @Override
     public void windowDeactivated(WindowEvent e) {
 
+    }
+
+    public boolean checkPlayerName(){
+        String checkString = this.introView.playerNameField.getText();
+        if(checkString.length() > 6){
+            System.out.println("이름은 6글자 이하로 해주세요.");
+            return false;
+        }
+        else return true;
     }
 }

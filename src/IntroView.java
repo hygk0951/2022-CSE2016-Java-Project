@@ -22,6 +22,8 @@ public class IntroView extends JFrame implements ViewBehavior {
     public JPanel welcomeSignPanel = new JPanel();
     public JLabel welcomeSignLabel = new JLabel("Welcome to Black Jack ♠");
     public JPanel timerPanel = new JPanel();
+    public JLabel playerNameLabel = new JLabel("<html>Player Name<br>(6글자 이하)</html>");
+    public JTextField playerNameField = new JTextField();
     public JCheckBox timerCheckBox = new JCheckBox("Timer", true);
     public JLabel timerLabel = new JLabel("30");
     public JButton timerDecreaseButton = new JButton("◀");
@@ -42,6 +44,11 @@ public class IntroView extends JFrame implements ViewBehavior {
         timerCheckBox.addActionListener(controlManager);
         timerDecreaseButton.addActionListener(controlManager);
         timerIncreaseButton.addActionListener(controlManager);
+
+        timerPanel.add(playerNameLabel);
+        timerPanel.add(playerNameField);
+        playerNameLabel.setFont(new Font("HYGothic-Medium", Font.PLAIN, 14));
+        playerNameField.setPreferredSize(new Dimension(60, 20));
         timerPanel.add(timerCheckBox);
         timerPanel.add(timerDecreaseButton);
         timerPanel.add(timerLabel);
@@ -65,7 +72,7 @@ public class IntroView extends JFrame implements ViewBehavior {
         introButton[1].setText("Play");
         introButton[1].setFont(new Font("serif", Font.PLAIN, 18));
         introButton[2].setText("Ranking Board");
-        introButton[2].setFont(new Font("serif", Font.PLAIN, 16));
+        introButton[2].setFont(new Font("serif", Font.PLAIN, 15));
 
         // 규칙설명 버튼
         introButton[0].addActionListener(controlManager);

@@ -29,8 +29,8 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <font name="HYGothic-Medium" size="17" style="0"/>
-                  <text value="Computer : "/>
+                  <font name="HYGungSo-Bold" size="17" style="1"/>
+                  <text value=""/>
                 </properties>
               </component>
               <component id="4adb1" class="javax.swing.JLabel" binding="playerCardTotal">
@@ -38,8 +38,8 @@
                   <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <font name="HYGothic-Medium" size="17" style="0"/>
-                  <text value="Player : "/>
+                  <font name="HYGungSo-Bold" size="17" style="1"/>
+                  <text value=""/>
                 </properties>
               </component>
               <component id="1d1a9" class="javax.swing.JLabel" binding="comCardList">

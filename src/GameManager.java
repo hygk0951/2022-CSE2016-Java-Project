@@ -21,6 +21,7 @@ public class GameManager {
     int gameStatus = 0;
 
     boolean whosTurn = true;
+    String playerName;
     boolean isTimerON = false;
     int timerTime = 0;
     boolean playerBet = false;
@@ -41,6 +42,7 @@ public class GameManager {
 
     public void playGame() {
         gameDeck = new CardDeck();
+        playerName = controlManager.introView.playerNameField.getText();
         isTimerON = controlManager.introView.timerCheckBox.isSelected();
         timerTime = Integer.parseInt(controlManager.introView.timerLabel.getText()) + 1;
         controlManager.gameView.comMoney.setText("$ " + computerMoney);
@@ -125,7 +127,7 @@ public class GameManager {
         currentTask = firstDrawTask;
         return firstDrawTask;
     }
-
+   
     public void drawCard(boolean whosTurn) {
         JLabel targetCardTotal;
         JLabel targetCardList;
@@ -180,7 +182,7 @@ public class GameManager {
                     cardLists.append("</font>");
             }
             cardLists.append("</html>");
-            targetCardTotal.setText("Player : " + sum(playerCards, playerCards.size()));
+            targetCardTotal.setText(playerName + " : " + sum(playerCards, playerCards.size()));
             targetCardList.setText(cardLists.toString());
         }
         // 턴 넘겨주기
