@@ -229,8 +229,8 @@ public class ControlManager implements ActionListener, WindowListener {
 
     public boolean checkPlayerName(){
         String checkString = this.introView.playerNameField.getText();
-        if(checkString.length() > 6){
-            System.out.println("이름은 6글자 이하로 해주세요.");
+        if(checkString.length() > 8){
+            System.out.println("이름은 8글자 이하로 해주세요.");
             return false;
         }
         else return true;

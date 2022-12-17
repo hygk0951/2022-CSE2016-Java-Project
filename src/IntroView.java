@@ -22,7 +22,7 @@ public class IntroView extends JFrame implements ViewBehavior {
     public JPanel welcomeSignPanel = new JPanel();
     public JLabel welcomeSignLabel = new JLabel("Welcome to Black Jack ♠");
     public JPanel timerPanel = new JPanel();
-    public JLabel playerNameLabel = new JLabel("<html>Player Name<br>(6글자 이하)</html>");
+    public JLabel playerNameLabel = new JLabel("<html>Player Name<br>(8글자 이하)</html>");
     public JTextField playerNameField = new JTextField();
     public JCheckBox timerCheckBox = new JCheckBox("Timer", true);
     public JLabel timerLabel = new JLabel("30");
@@ -48,7 +48,7 @@ public class IntroView extends JFrame implements ViewBehavior {
         timerPanel.add(playerNameLabel);
         timerPanel.add(playerNameField);
         playerNameLabel.setFont(new Font("HYGothic-Medium", Font.PLAIN, 14));
-        playerNameField.setPreferredSize(new Dimension(60, 20));
+        playerNameField.setPreferredSize(new Dimension(100, 20));
         timerPanel.add(timerCheckBox);
         timerPanel.add(timerDecreaseButton);
         timerPanel.add(timerLabel);
