@@ -56,7 +56,7 @@ public class GameManager {
 
             @Override
             public void run() {
-                controlManager.gameView.gameGuide.setText("블랙잭 게임에 오신것을 환영합니다... " + (wait - 1));
+                controlManager.gameView.gameGuide.setText("카드를 섞는중... " + (wait - 1));
                 controlManager.gameView.bettingButton.setEnabled(false);
                 controlManager.gameView.moreCardButton.setEnabled(false);
                 controlManager.gameView.stopButton.setEnabled(false);
@@ -182,7 +182,7 @@ public class GameManager {
                     cardLists.append("</font>");
             }
             cardLists.append("</html>");
-            targetCardTotal.setText(playerName + " : " + sum(playerCards, playerCards.size()));
+            targetCardTotal.setText("Player("+playerName + ") : " + sum(playerCards, playerCards.size()));
             targetCardList.setText(cardLists.toString());
         }
         // 턴 넘겨주기
@@ -246,10 +246,10 @@ public class GameManager {
         switch (gameStatus) {
             case 0 -> timer.schedule(getWelcomeTask(), 0, 1000);
             case 1 -> {
-                if (timerChecked)
-                    // 금액을 배팅해주세요...(타이머숫자)
-                    timer.schedule(getBettingTask(timerTime), 0, 1000);
-                else
+//                if (timerChecked)
+//                    // 금액을 배팅해주세요...(타이머숫자)
+//                    timer.schedule(getBettingTask(timerTime), 0, 1000);
+//                else
                     controlManager.gameView.gameGuide.setText("금액을 배팅해주세요.");
             }
             case 2 -> {
