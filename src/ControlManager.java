@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Objects;
 
-public class ControlManager implements ActionListener, WindowListener {
+public class ControlManager implements ActionListener, WindowListener{
     // View controller 연결 (View)
     IntroView introView;
     RuleView ruleView;
@@ -14,6 +14,7 @@ public class ControlManager implements ActionListener, WindowListener {
 
     // Game manager 연결 (Model)
     GameManager gameManager;
+    SoundManager soundManager;
 
     CardDeck practiceDeck;
     String cardColor = "";
@@ -34,7 +35,8 @@ public class ControlManager implements ActionListener, WindowListener {
         gameView = frame;
     }
 
-    ControlManager() {
+    ControlManager() throws Exception{
+        soundManager = new SoundManager();
         newCardDeck();
     }
 

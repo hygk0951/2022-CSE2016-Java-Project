@@ -138,7 +138,7 @@ public class GameManager {
             targetCardList = controlManager.gameView.comCardList;
             computerCards.add(gameDeck.newCard());
             for (int i = 0; i < computerCards.size(); i++) {
-                if (i == 0) cardLists.append("? ");
+                if (i == 0) cardLists.append("?? ");
                 else {
                     if (computerCards.get(i).getSymbol() == '♥' || computerCards.get(i).getSymbol() == '◆')
                         cardLists.append("<font color='red'>");
@@ -158,9 +158,9 @@ public class GameManager {
             }
             cardLists.append("</html>");
             if (computerCards.size() == 1)
-                targetCardTotal.setText("Computer : ?");
+                targetCardTotal.setText("Value of Computer : ?");
             else
-                targetCardTotal.setText("Computer : ? + " + (sum(computerCards, computerCards.size()) - sum(computerCards, 1)));
+                targetCardTotal.setText("Value of Computer : ? + " + (sum(computerCards, computerCards.size()) - sum(computerCards, 1)));
             targetCardList.setText(cardLists.toString());
         } else {
             targetCardTotal = controlManager.gameView.playerCardTotal;
@@ -182,7 +182,7 @@ public class GameManager {
                     cardLists.append("</font>");
             }
             cardLists.append("</html>");
-            targetCardTotal.setText("Player("+playerName + ") : " + sum(playerCards, playerCards.size()));
+            targetCardTotal.setText("Value of Player("+playerName + ") : " + sum(playerCards, playerCards.size()));
             targetCardList.setText(cardLists.toString());
         }
         // 턴 넘겨주기
