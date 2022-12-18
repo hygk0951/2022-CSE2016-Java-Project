@@ -24,6 +24,7 @@ public class IntroView extends JFrame implements ViewBehavior {
     public JPanel timerPanel = new JPanel();
     public JLabel playerNameLabel = new JLabel("<html>Player Name<br>(8글자 이하)</html>");
     public JTextField playerNameField = new JTextField();
+    public JCheckBox soundCheckBox = new JCheckBox("Sound", true);
     public JCheckBox timerCheckBox = new JCheckBox("Timer", true);
     public JLabel timerLabel = new JLabel("30");
     public JButton timerDecreaseButton = new JButton("◀");
@@ -41,6 +42,7 @@ public class IntroView extends JFrame implements ViewBehavior {
 
         // CENTER - 타이머 등록
         timerLabel.setHorizontalAlignment(JTextField.CENTER);
+        soundCheckBox.addActionListener(controlManager);
         timerCheckBox.addActionListener(controlManager);
         timerDecreaseButton.addActionListener(controlManager);
         timerIncreaseButton.addActionListener(controlManager);
@@ -49,10 +51,12 @@ public class IntroView extends JFrame implements ViewBehavior {
         timerPanel.add(playerNameField);
         playerNameLabel.setFont(new Font("HYGothic-Medium", Font.PLAIN, 14));
         playerNameField.setPreferredSize(new Dimension(100, 20));
+        timerPanel.add(soundCheckBox);
         timerPanel.add(timerCheckBox);
         timerPanel.add(timerDecreaseButton);
         timerPanel.add(timerLabel);
         timerPanel.add(timerIncreaseButton);
+        soundCheckBox.setFont(new Font("console", Font.PLAIN, 18));
         timerCheckBox.setFont(new Font("console", Font.PLAIN, 18));
         timerDecreaseButton.setFont(new Font("console", Font.PLAIN, 12));
         timerLabel.setFont(new Font("console", Font.PLAIN, 18));
@@ -68,11 +72,11 @@ public class IntroView extends JFrame implements ViewBehavior {
             introButtonsPanel.add(introButton[i]);
         }
         introButton[0].setText("Rule");
-        introButton[0].setFont(new Font("serif", Font.PLAIN, 18));
+        introButton[0].setFont(new Font("serif", Font.PLAIN, 20));
         introButton[1].setText("Play");
-        introButton[1].setFont(new Font("serif", Font.PLAIN, 18));
+        introButton[1].setFont(new Font("serif", Font.PLAIN, 20));
         introButton[2].setText("Ranking Board");
-        introButton[2].setFont(new Font("serif", Font.PLAIN, 15));
+        introButton[2].setFont(new Font("serif", Font.PLAIN, 18));
 
         // 규칙설명 버튼
         introButton[0].addActionListener(controlManager);

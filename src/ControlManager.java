@@ -1,12 +1,22 @@
 // Controller
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.util.Objects;
 
-public class ControlManager implements ActionListener, WindowListener{
+public class ControlManager implements ActionListener, WindowListener {
+
+    // 프레임 좌상단 아이콘
+    Toolkit toolkit = Toolkit.getDefaultToolkit();
+    Image img = toolkit.getImage("assets/spade.png");
+
     // View controller 연결 (View)
     IntroView introView;
     RuleView ruleView;
@@ -25,17 +35,20 @@ public class ControlManager implements ActionListener, WindowListener{
 
     public void setIntroView(IntroView frame) {
         introView = frame;
+        introView.setIconImage(img);
     }
 
     public void setRuleView(RuleView frame) {
         ruleView = frame;
+        ruleView.setIconImage(img);
     }
 
     public void setGameView(GameView frame) {
         gameView = frame;
+        gameView.setIconImage(img);
     }
 
-    ControlManager() throws Exception{
+    ControlManager() throws Exception {
         soundManager = new SoundManager();
         newCardDeck();
     }
@@ -47,6 +60,26 @@ public class ControlManager implements ActionListener, WindowListener{
     public void actionPerformed(ActionEvent e) {
         // ActionEvent의 종류 구분
         switch (e.getActionCommand()) {
+            //
+            case "Sound":
+                boolean isSoundChecked = introView.soundCheckBox.isSelected();
+                if(isSoundChecked){
+                    try {
+                        this.soundManager = new SoundManager();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else{
+                    if(this.soundManager.bgmClip != null)
+                        this.soundManager.bgmClip.close();
+                    if(this.soundManager.shuffleClip != null)
+                        this.soundManager.shuffleClip.close();
+                    if(this.soundManager.drawClip != null)
+                        this.soundManager.drawClip.close();
+                    this.soundManager = null;
+                }
+                break;
             // Timer 체크박스를 누른 경우
             case "Timer":
                 boolean isChecked = introView.timerCheckBox.isSelected();
@@ -65,14 +98,17 @@ public class ControlManager implements ActionListener, WindowListener{
                 if (timer < 60) introView.timerLabel.setText(String.valueOf(timer + 5));
                 break;
             case "Play":
-                if(checkPlayerName()){
+                if (checkPlayerName()) {
                     GameView gameView = new GameView(this, "Play");
                     setGameView(gameView);
                     introView.setVisible(false);
                     gameManager = new GameManager(this);
-                    gameManager.playGame();
-                }
-                else{
+                    try {
+                        gameManager.playGame();
+                    } catch (Exception ee) {
+                        ee.printStackTrace();
+                    }
+                } else {
 
                 }
                 break;
@@ -157,9 +193,9 @@ public class ControlManager implements ActionListener, WindowListener{
             case "배팅하기":
                 try {
                     this.gameManager.playerBetting = Integer.parseInt(this.gameView.bettingField.getText());
-                    if(this.gameManager.playerBetting < 0)
+                    if (this.gameManager.playerBetting < 0)
                         throw new NumberFormatException("minusNumber");
-                    else if(this.gameManager.playerBetting > this.gameManager.playerMoney)
+                    else if (this.gameManager.playerBetting > this.gameManager.playerMoney)
                         throw new NumberFormatException("overNumber");
                     this.gameManager.playerBet = true;
                     this.gameView.bettingButton.setEnabled(false);
@@ -169,13 +205,15 @@ public class ControlManager implements ActionListener, WindowListener{
                     this.gameManager.nextStatus();
                     this.gameManager.playerBet = true;
                 } catch (NumberFormatException nfe) {
-                    if(Objects.equals(nfe.getMessage(), "minusNumber"))
+                    if (Objects.equals(nfe.getMessage(), "minusNumber"))
                         this.gameView.totalBettingPrize.setText("0보다 큰 값을 입력해주세요.");
-                    if(Objects.equals(nfe.getMessage(), "overNumber"))
+                    if (Objects.equals(nfe.getMessage(), "overNumber"))
                         this.gameView.totalBettingPrize.setText("배팅금액이 보유금액보다 많습니다. 다시 입력해주세요.");
                     else
                         this.gameView.totalBettingPrize.setText("자연수 금액만 입력해주세요.");
                     this.gameView.bettingField.setText("");
+                } catch (Exception ee){
+                    ee.printStackTrace();
                 }
                 break;
             case "Go Home":
@@ -229,12 +267,18 @@ public class ControlManager implements ActionListener, WindowListener{
 
     }
 
-    public boolean checkPlayerName(){
+    public boolean checkPlayerName() {
         String checkString = this.introView.playerNameField.getText();
-        if(checkString.length() > 8){
-            System.out.println("이름은 8글자 이하로 해주세요.");
+        JLabel warning = new JLabel();
+        warning.setFont(new Font("HYGothic-Medium", Font.PLAIN, 14));
+        if (checkString.length() == 0) {
+            warning.setText("플레이어 이름을 입력해주세요.");
+            JOptionPane.showMessageDialog(null, warning, "주의", JOptionPane.WARNING_MESSAGE);
             return false;
-        }
-        else return true;
+        } else if (checkString.length() > 8) {
+            warning.setText("플레이어 이름은 공백포함 8글자 이하로 해주세요.");
+            JOptionPane.showMessageDialog(null, warning, "주의", JOptionPane.WARNING_MESSAGE);
+            return false;
+        } else return true;
     }
 }

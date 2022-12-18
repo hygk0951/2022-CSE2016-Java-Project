@@ -8,11 +8,6 @@ public class Card {
         this.number = number;
     }
 
-    public Card(char symbol, char number) {
-        this.symbol = symbol;
-        this.number = number;
-    }
-
     public char getSymbol() {
         char symbolChanged = ' ';
         switch (symbol) {

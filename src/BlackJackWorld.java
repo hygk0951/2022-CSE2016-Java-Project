@@ -1,9 +1,9 @@
 public class BlackJackWorld {
     public static void main(String[] args) throws Exception {
-        ControlManager viewControlManager = new ControlManager();
+        ControlManager controlManager = new ControlManager();
 
-        IntroView introView = new IntroView(viewControlManager,"Intro", 500, 200);
-        viewControlManager.setIntroView(introView);
+        IntroView introView = new IntroView(controlManager,"Intro", 550, 200);
+        controlManager.setIntroView(introView);
         introView.setVisible(true);
     }
 }

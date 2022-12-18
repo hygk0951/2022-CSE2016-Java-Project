@@ -1,6 +1,9 @@
 // Model
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.ArrayList;
@@ -8,6 +11,7 @@ import java.util.ArrayList;
 public class GameManager {
 
     ControlManager controlManager;
+
     Timer timer;
     TimerTask currentTask;
 
@@ -119,7 +123,15 @@ public class GameManager {
                     this.cancel();
                 } else {
                     switch (wait) {
-                        case 9, 7, 5, 3 -> drawCard(whosTurn);
+                        case 9, 7, 5, 3 -> {
+                            drawCard(whosTurn);
+                            try {
+                                controlManager.soundManager.playSound("draw");
+                            } catch (Exception e) {
+                                if(controlManager.soundManager == null) System.out.println("Mute mode");
+                                else e.printStackTrace();
+                            }
+                        }
                     }
                 }
             }
@@ -158,9 +170,9 @@ public class GameManager {
             }
             cardLists.append("</html>");
             if (computerCards.size() == 1)
-                targetCardTotal.setText("Value of Computer : ?");
+                targetCardTotal.setText("Dealer : ?");
             else
-                targetCardTotal.setText("Value of Computer : ? + " + (sum(computerCards, computerCards.size()) - sum(computerCards, 1)));
+                targetCardTotal.setText("Dealer : ? + " + (sum(computerCards, computerCards.size()) - sum(computerCards, 1)));
             targetCardList.setText(cardLists.toString());
         } else {
             targetCardTotal = controlManager.gameView.playerCardTotal;
@@ -182,7 +194,7 @@ public class GameManager {
                     cardLists.append("</font>");
             }
             cardLists.append("</html>");
-            targetCardTotal.setText("Value of Player("+playerName + ") : " + sum(playerCards, playerCards.size()));
+            targetCardTotal.setText("Player(" + playerName + ") : " + sum(playerCards, playerCards.size()));
             targetCardList.setText(cardLists.toString());
         }
         // 턴 넘겨주기
@@ -244,13 +256,22 @@ public class GameManager {
         // 7 = 최종 승리 or 패배 (한쪽이 배팅금액 소진)
         boolean timerChecked = controlManager.introView.timerCheckBox.isSelected();
         switch (gameStatus) {
-            case 0 -> timer.schedule(getWelcomeTask(), 0, 1000);
+            case 0 -> {
+                timer.schedule(getWelcomeTask(), 0, 1000);
+                try {
+                    controlManager.soundManager.playSound("shuffle");
+                } catch (Exception e) {
+                   if(controlManager.soundManager == null) System.out.println("Mute mode");
+                   else e.printStackTrace();
+                }
+            }
             case 1 -> {
+                // 배팅할때는 타이머 없이 진행, 카드 받는 단계에서부터 타이머로 진행
 //                if (timerChecked)
 //                    // 금액을 배팅해주세요...(타이머숫자)
 //                    timer.schedule(getBettingTask(timerTime), 0, 1000);
 //                else
-                    controlManager.gameView.gameGuide.setText("금액을 배팅해주세요.");
+                controlManager.gameView.gameGuide.setText("금액을 배팅해주세요.");
             }
             case 2 -> {
                 if (!playerBet) playerBetting = defaultBetting;
