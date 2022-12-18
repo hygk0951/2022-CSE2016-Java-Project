@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class SoundManager {
-    File bgmFile = new File("C:\\Users\\stonl\\Documents\\gitPractice\\Cloning\\2022-CSE2016-Java-Project\\sounds\\NoCopyrightBGM.wav");
+    File bgmFile = new File("sounds/NoCopyrightBGM.wav");
     AudioInputStream audioStream = AudioSystem.getAudioInputStream(bgmFile);
     Clip clip = AudioSystem.getClip();
 
