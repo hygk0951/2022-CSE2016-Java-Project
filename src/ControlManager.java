@@ -276,9 +276,11 @@ public class ControlManager implements ActionListener, WindowListener {
             JOptionPane.showMessageDialog(null, warning, "주의", JOptionPane.WARNING_MESSAGE);
             return false;
         } else if (checkString.length() > 8) {
-            warning.setText("플레이어 이름은 공백포함 8글자 이하로 해주세요.");
+            warning.setText("플레이어 이름은 공백포함 최대 8글자입니다.");
             JOptionPane.showMessageDialog(null, warning, "주의", JOptionPane.WARNING_MESSAGE);
             return false;
-        } else return true;
+        } else {
+            return true;
+        }
     }
 }
