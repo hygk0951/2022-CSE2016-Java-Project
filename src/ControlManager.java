@@ -25,6 +25,7 @@ public class ControlManager implements ActionListener, WindowListener {
     // Game manager 연결 (Model)
     GameManager gameManager;
     SoundManager soundManager;
+    RankManager rankManager;
 
     CardDeck practiceDeck;
     String cardColor = "";
@@ -50,6 +51,7 @@ public class ControlManager implements ActionListener, WindowListener {
 
     ControlManager() throws Exception {
         soundManager = new SoundManager();
+        rankManager = new RankManager();
         newCardDeck();
     }
 
@@ -118,7 +120,7 @@ public class ControlManager implements ActionListener, WindowListener {
                 introView.setVisible(false);
                 break;
             case "Ranking Board":
-                System.out.println("Ranking Board button pressed");
+                rankManager.printRankingBoard();
                 break;
             case "새 카드 받기":
                 try {
