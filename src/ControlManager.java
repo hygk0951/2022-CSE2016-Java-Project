@@ -27,6 +27,7 @@ public class ControlManager implements ActionListener, WindowListener {
     SoundManager soundManager;
     RankManager rankManager;
 
+    boolean isSoundChecked;
     CardDeck practiceDeck;
     String cardColor = "";
     String cardList = "";
@@ -52,6 +53,7 @@ public class ControlManager implements ActionListener, WindowListener {
     ControlManager() throws Exception {
         soundManager = new SoundManager();
         rankManager = new RankManager();
+        soundManager.playSound("bgm");
         newCardDeck();
     }
 
@@ -63,23 +65,17 @@ public class ControlManager implements ActionListener, WindowListener {
         // ActionEvent의 종류 구분
         switch (e.getActionCommand()) {
             //
-            case "Sound":
-                boolean isSoundChecked = introView.soundCheckBox.isSelected();
+            case "BGM":
+                isSoundChecked = introView.soundCheckBox.isSelected();
+                System.out.println(isSoundChecked);
                 if(isSoundChecked){
                     try {
-                        this.soundManager = new SoundManager();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                        soundManager.playSound("bgm");
+                    } catch (Exception pse){
                     }
                 }
                 else{
-                    if(this.soundManager.bgmClip != null)
-                        this.soundManager.bgmClip.close();
-                    if(this.soundManager.shuffleClip != null)
-                        this.soundManager.shuffleClip.close();
-                    if(this.soundManager.drawClip != null)
-                        this.soundManager.drawClip.close();
-                    this.soundManager = null;
+                    soundManager.stopSound();
                 }
                 break;
             // Timer 체크박스를 누른 경우
@@ -105,8 +101,10 @@ public class ControlManager implements ActionListener, WindowListener {
                     setGameView(gameView);
                     introView.setVisible(false);
                     gameManager = new GameManager(this);
+                    gameManager.gameStatus = "welcome";
                     try {
                         gameManager.playGame();
+                        soundManager = new SoundManager();
                     } catch (Exception ee) {
                         ee.printStackTrace();
                     }
@@ -195,24 +193,27 @@ public class ControlManager implements ActionListener, WindowListener {
             case "배팅하기":
                 try {
                     this.gameManager.playerBetting = Integer.parseInt(this.gameView.bettingField.getText());
-                    if (this.gameManager.playerBetting < 0)
-                        throw new NumberFormatException("minusNumber");
-                    else if (this.gameManager.playerBetting > this.gameManager.playerMoney)
-                        throw new NumberFormatException("overNumber");
+                    if(this.gameManager.playerBetting <= 0) throw new NumberFormatException("minusNumber");
+                    else if(this.gameManager.playerBetting > this.gameManager.playerMoney)
+                        throw new NumberFormatException("overPlayerMoney");
+                    else if(this.gameManager.playerBetting > this.gameManager.computerMoney)
+                        throw new NumberFormatException("overComputerMoney");
                     this.gameManager.playerBet = true;
                     this.gameView.bettingButton.setEnabled(false);
                     this.gameView.bettingField.setEnabled(false);
-                    this.gameManager.gameStatus = 2;
+                    this.gameManager.gameStatus = "firstDraw";
                     this.gameManager.currentTask.cancel();
                     this.gameManager.nextStatus();
                     this.gameManager.playerBet = true;
                 } catch (NumberFormatException nfe) {
                     if (Objects.equals(nfe.getMessage(), "minusNumber"))
-                        this.gameView.totalBettingPrize.setText("0보다 큰 값을 입력해주세요.");
-                    if (Objects.equals(nfe.getMessage(), "overNumber"))
-                        this.gameView.totalBettingPrize.setText("배팅금액이 보유금액보다 많습니다. 다시 입력해주세요.");
+                        this.gameView.totalBettingPrize.setText("0보다 큰 금액을 입력해주세요.");
+                    else if (Objects.equals(nfe.getMessage(), "overPlayerMoney"))
+                        this.gameView.totalBettingPrize.setText("플레이어의 잔액보다 큰 금액을 배팅할 수 없습니다.");
+                    else if (Objects.equals(nfe.getMessage(), "overComputerMoney"))
+                        this.gameView.totalBettingPrize.setText("딜러의 잔액보다 큰 금액을 배팅할 수 없습니다.");
                     else
-                        this.gameView.totalBettingPrize.setText("자연수 금액만 입력해주세요.");
+                        this.gameView.totalBettingPrize.setText("숫자가 아닙니다. 올바른 금액을 입력해주세요.");
                     this.gameView.bettingField.setText("");
                 } catch (Exception ee){
                     ee.printStackTrace();
@@ -224,7 +225,21 @@ public class ControlManager implements ActionListener, WindowListener {
                 if (gameManager != null) gameManager.timer.cancel();
                 introView.setVisible(true);
                 break;
-
+            case "카드 받기":
+                gameManager.playerNeedMoreCard = true;
+                this.gameView.moreCardButton.setEnabled(false);
+                this.gameView.stopButton.setEnabled(false);
+                gameManager.currentTask.cancel();
+                gameManager.gameStatus = "givePlayerACard";
+                gameManager.nextStatus();
+                break;
+            case "멈추기":
+                this.gameView.moreCardButton.setEnabled(false);
+                this.gameView.stopButton.setEnabled(false);
+                gameManager.currentTask.cancel();
+                gameManager.gameStatus = "computerDrawTurn";
+                gameManager.nextStatus();
+                break;
             default:
                 break;
         }

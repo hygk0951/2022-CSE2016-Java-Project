@@ -6,14 +6,11 @@ public class SoundManager {
     String bgm = "assets/NoCopyrightBGM.wav";
     String shuffle = "assets/shuffle.wav";
     String draw = "assets/draw.wav";
-    Clip bgmClip, shuffleClip, drawClip;
 
-    public SoundManager() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        try {
-            bgmClip = playClip(bgm, true, -10.0f);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static Clip bgmClip, shuffleClip, drawClip;
+
+    public SoundManager() {
+
     }
 
     public Clip playClip(String filename, boolean loop, float gain) throws Exception {
@@ -33,15 +30,24 @@ public class SoundManager {
     public void playSound(String sound) throws LineUnavailableException, IOException {
         try {
             switch (sound) {
+                case "bgm":
+                    bgmClip = playClip(bgm, true, -20.0f);
+                    break;
                 case "shuffle":
-                    shuffleClip = playClip(shuffle, false, -10.0f);
+                    shuffleClip = playClip(shuffle, false, -20.0f);
                     break;
                 case "draw":
-                    drawClip = playClip(draw, false, -10.0f);
+                    drawClip = playClip(draw, false, -20.0f);
                     break;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void stopSound() {
+        if (bgmClip != null) bgmClip.stop();
+        if (shuffleClip != null) shuffleClip.stop();
+        if (drawClip != null) drawClip.stop();
     }
 }

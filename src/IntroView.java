@@ -24,7 +24,7 @@ public class IntroView extends JFrame implements ViewBehavior {
     public JPanel timerPanel = new JPanel();
     public JLabel playerNameLabel = new JLabel("<html>Player Name<br>(8글자 이하)</html>");
     public JTextField playerNameField = new JTextField();
-    public JCheckBox soundCheckBox = new JCheckBox("Sound", true);
+    public JCheckBox soundCheckBox = new JCheckBox("BGM", true);
     public JCheckBox timerCheckBox = new JCheckBox("Timer", true);
     public JLabel timerLabel = new JLabel("30");
     public JButton timerDecreaseButton = new JButton("◀");

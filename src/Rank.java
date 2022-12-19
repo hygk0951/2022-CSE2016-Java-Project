@@ -4,7 +4,7 @@ public class Rank implements Comparable {
 
     Rank(String nickName, int score) {
         this.nickName = nickName;
-        if (score > 0) this.score = score;
+        this.score = score;
     }
 
     // 점수 높은순으로 정렬
