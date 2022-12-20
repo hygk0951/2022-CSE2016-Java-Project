@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -15,7 +16,8 @@ public class ControlManager implements ActionListener, WindowListener {
 
     // 프레임 좌상단 아이콘
     Toolkit toolkit = Toolkit.getDefaultToolkit();
-    Image img = toolkit.getImage("assets/spade.png");
+//    Image img = toolkit.getImage("assets/spade.png");
+    Image img = toolkit.getImage(getClass().getClassLoader().getResource("spade.png"));
 
     // View controller 연결 (View)
     IntroView introView;
@@ -35,6 +37,13 @@ public class ControlManager implements ActionListener, WindowListener {
     int total = 0;
     int AceElevenCount = 0;
 
+    ControlManager() throws Exception {
+        soundManager = new SoundManager();
+        rankManager = new RankManager();
+        soundManager.playSound("bgm");
+        newCardDeck();
+    }
+
     public void setIntroView(IntroView frame) {
         introView = frame;
         introView.setIconImage(img);
@@ -50,13 +59,6 @@ public class ControlManager implements ActionListener, WindowListener {
         gameView.setIconImage(img);
     }
 
-    ControlManager() throws Exception {
-        soundManager = new SoundManager();
-        rankManager = new RankManager();
-        soundManager.playSound("bgm");
-        newCardDeck();
-    }
-
     public void newCardDeck() {
         practiceDeck = new CardDeck();
     }
@@ -67,14 +69,13 @@ public class ControlManager implements ActionListener, WindowListener {
             //
             case "BGM":
                 isSoundChecked = introView.soundCheckBox.isSelected();
-                System.out.println(isSoundChecked);
-                if(isSoundChecked){
+//                System.out.println(isSoundChecked);
+                if (isSoundChecked) {
                     try {
                         soundManager.playSound("bgm");
-                    } catch (Exception pse){
+                    } catch (Exception pse) {
                     }
-                }
-                else{
+                } else {
                     soundManager.stopSound();
                 }
                 break;
@@ -127,7 +128,8 @@ public class ControlManager implements ActionListener, WindowListener {
                     int number = selected.getNumber();
 
                     switch (number) {
-                        case 1 -> { // Ace가 나온경우
+                        case 1:
+                            // Ace가 나온경우
                             // 10으로 계산했을때 21을 넘어서면 안된다.
                             if (total + 11 > 21) {
                                 number = 1;
@@ -138,20 +140,25 @@ public class ControlManager implements ActionListener, WindowListener {
                                 total += number;
                             }
                             number = 65; // A
-                        }
-                        case 11 -> { // J = 74
+                            break;
+                        case 11:
+                            // J = 74
                             total += 10;
                             number += 63;
-                        }
-                        case 12 -> { // Q = 81
+                            break;
+                        case 12:
+                            // Q = 81
                             total += 10;
                             number += 69;
-                        }
-                        case 13 -> { // K = 75
+                            break;
+                        case 13:
+                            // K = 75
                             total += 10;
                             number += 62;
-                        }
-                        default -> total += number;
+                            break;
+                        default:
+                            total += number;
+                            break;
                     }
                     // J, Q, K, A 인 경우
 
@@ -175,7 +182,7 @@ public class ControlManager implements ActionListener, WindowListener {
                     this.ruleView.totalValue.setText("Total : " + total);
                 } else if (total == 21) {
                     this.ruleView.newCardButton.setEnabled(false);
-                    System.out.println("Black Jack!");
+//                    System.out.println("Black Jack!");
                     this.ruleView.totalValue.setText("Total : " + total + " Black Jack!");
                 } else {
                     this.ruleView.totalValue.setText("Total : " + total);
@@ -193,10 +200,10 @@ public class ControlManager implements ActionListener, WindowListener {
             case "배팅하기":
                 try {
                     this.gameManager.playerBetting = Integer.parseInt(this.gameView.bettingField.getText());
-                    if(this.gameManager.playerBetting <= 0) throw new NumberFormatException("minusNumber");
-                    else if(this.gameManager.playerBetting > this.gameManager.playerMoney)
+                    if (this.gameManager.playerBetting <= 0) throw new NumberFormatException("minusNumber");
+                    else if (this.gameManager.playerBetting > this.gameManager.playerMoney)
                         throw new NumberFormatException("overPlayerMoney");
-                    else if(this.gameManager.playerBetting > this.gameManager.computerMoney)
+                    else if (this.gameManager.playerBetting > this.gameManager.computerMoney)
                         throw new NumberFormatException("overComputerMoney");
                     this.gameManager.playerBet = true;
                     this.gameView.bettingButton.setEnabled(false);
@@ -215,7 +222,7 @@ public class ControlManager implements ActionListener, WindowListener {
                     else
                         this.gameView.totalBettingPrize.setText("숫자가 아닙니다. 올바른 금액을 입력해주세요.");
                     this.gameView.bettingField.setText("");
-                } catch (Exception ee){
+                } catch (Exception ee) {
                     ee.printStackTrace();
                 }
                 break;

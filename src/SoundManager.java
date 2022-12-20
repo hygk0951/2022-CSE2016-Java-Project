@@ -1,43 +1,53 @@
 import javax.sound.sampled.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 public class SoundManager {
-    String bgm = "assets/NoCopyrightBGM.wav";
-    String shuffle = "assets/shuffle.wav";
-    String draw = "assets/draw.wav";
+    String bgm = "NoCopyrightBGM.wav";
+    String shuffle = "shuffle.wav";
+    String draw = "draw.wav";
 
     public static Clip bgmClip, shuffleClip, drawClip;
-
-    public SoundManager() {
+    public SoundManager() throws URISyntaxException {
 
     }
 
     public Clip playClip(String filename, boolean loop, float gain) throws Exception {
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filename));
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioInputStream);
-        clip.setFramePosition(0);
+        try {
+            URL url = SoundManager.class.getResource(filename);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.setFramePosition(0);
 
-        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-        gainControl.setValue(gain);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(gain);
 
-        if (loop) clip.loop(Clip.LOOP_CONTINUOUSLY);
-        else clip.start();
-        return clip;
+            if (loop) clip.loop(Clip.LOOP_CONTINUOUSLY);
+            else clip.start();
+            return clip;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void playSound(String sound) throws LineUnavailableException, IOException {
         try {
             switch (sound) {
                 case "bgm":
-                    bgmClip = playClip(bgm, true, -20.0f);
+                    bgmClip = playClip(bgm, true, -10.0f);
                     break;
                 case "shuffle":
-                    shuffleClip = playClip(shuffle, false, -20.0f);
+                    shuffleClip = playClip(shuffle, false, -10.0f);
                     break;
                 case "draw":
-                    drawClip = playClip(draw, false, -20.0f);
+                    drawClip = playClip(draw, false, -10.0f);
                     break;
             }
         } catch (Exception e) {
